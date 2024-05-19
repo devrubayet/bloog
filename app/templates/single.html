@@ -1,0 +1,237 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Untree.co">
+    {% block favicon %}
+	<link rel="shortcut icon" href="{% static "images/favicon.png" %}">
+	{% endblock favicon %}
+  
+    <meta name="description" content="" />
+    <meta name="keywords" content="bootstrap, bootstrap5" />
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  
+    <link rel="stylesheet" href="{% static "fonts/icomoon/style.css" %}">
+    <link rel="stylesheet" href="{% static "fonts/flaticon/font/flaticon.css" %}">
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+  
+    
+    <!--fontawesome icon-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+    <link rel="stylesheet" href="{% static "css/tiny-slider.css" %}">
+    <link rel="stylesheet" href="{% static "css/aos.css" %}">
+    <link rel="stylesheet" href="{% static "css/glightbox.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+  
+    <link rel="stylesheet" href="{% static "css/flatpickr.min.css" %}">
+  
+  
+    <title>Blogy &mdash; {{blog.title}}</title>
+  
+  </head>
+<body>
+
+  
+
+  {% include "nav.html" %}
+
+  <div class="site-cover site-cover-sm same-height overlay single-page" style="background-image: url('{{blog.cover.url}}');">
+    <div class="container">
+      <div class="row same-height justify-content-center">
+        <div class="col-md-6">
+          <div class="post-entry text-center">
+            <h1 class="mb-4">{{blog.title}}</h1>
+            <div class="post-meta align-items-center text-center">
+              <figure class="author-figure mb-0 me-3 d-inline-block"><img src="{{blog.author.avatar.url}}" alt="Image" class="img-fluid"></figure>
+              <span class="d-inline-block mt-1">{{blog.author.name|capfirst}}</span>
+              <span>&nbsp;-&nbsp; {{blog.created | date:'d, F Y'}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+
+      <div class="row blog-entries element-animate">
+
+        <div class="col-md-12 col-lg-8 bg-white rounded p-2 main-content">
+
+          <div class="post-content-body">
+            <p>{{blog.details|safe }}</p>
+            
+            <div class="row my-4">
+              <div class="col-md-12 mb-4">
+                <img src="{{blog.cover.url}}" alt="Image placeholder" class="img-fluid rounded">
+              </div>
+              <div class="col-md-6 mb-4">
+                <img src="{{blog.cover.url}}" alt="Image placeholder" class="img-fluid rounded">
+              </div>
+              <div class="col-md-6 mb-4">
+                <img src="{{blog.cover.url}}" alt="Image placeholder" class="img-fluid rounded">
+              </div>
+            </div>
+            <p>{{blog.details|safe}}</p>
+          </div>
+
+
+          <div class="pt-5">
+            <p>Categories:  <a href="#">{{blog.category.name}}</a>   {% if tags %} Tags: {% for tag in tags %} <a href="#"> #{{ tag.name }},</a>{% endfor %}</p>{% endif %} 
+          </div>
+
+
+          <div class="pt-5 comment-wrap">
+            <h3 class="mb-5 heading">{{blog.comment_set.count}} Comment</h3>
+            <ul class="comment-list">
+
+              {% for comment in blog_comments %}
+              <li class="comment">
+                <div class="vcard">
+                  <img src="{% static "images/person_1.jpg" %}" alt="Image placeholder">
+                </div>
+                <div class="comment-body">
+                  <h3>{{comment.name}}</h3>
+                  <div class="meta">{{comment.created | date:'d, F Y' }} at {{comment.created|time:'h:i'}}</div>
+                  <p>{{comment.comment}}</p>
+                  <p><a href="#collapseExample{{comment.id}}" data-bs-toggle="collapse"  role="button" aria-expanded="false" aria-controls="collapseExample" class="reply rounded">Reply</a></p>
+                  <div class="collapse" id="collapseExample{{comment.id}}">
+                    <div class="card card-body">
+                      Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+                    </div>
+                  </div>
+                </div>
+              </li>
+              {% endfor %}
+            
+              
+            </ul>
+            <!-- END comment-list -->
+
+            <div class="comment-form-wrap pt-5">
+              
+              <h3 class="mb-5">Leave a comment</h3>
+              <form action="{% url "blog-post" blog.id %}" method="POST" class="p-5 bg-light">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="name">Name *</label>
+                  <input type="text" name="name"  class="form-control" id="name">
+                </div>
+                <!--
+                <div class="form-group">
+                  <label for="email">Email *</label>
+                  <input type="email" class="form-control" id="email">
+                </div>
+                <div class="form-group">
+                  <label for="website">Website</label>
+                  <input type="url" class="form-control" id="website">
+                </div>
+                --> 
+                <div class="form-group">
+                  <label for="message">Message</label>
+                  <textarea name="massage" id="message" cols="30" rows="10" class="form-control"></textarea>
+                </div>
+                <div class="form-group">
+                  <input type="submit" value="Post Comment" class="btn btn-primary">
+                </div>
+
+              </form>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- END main-content -->
+
+        <div class="col-md-12 col-lg-4 sidebar">
+          
+          <!-- END sidebar-box -->
+          <div class="sidebar-box p-4 rounded">
+            <div class="bio text-center">
+              <img src="{{blog.author.avatar.url}}" alt="Image Placeholder" class="img-fluid mb-3">
+              <div class="bio-body">
+                <h2>{{blog.author.name|upper}}</h2>
+                <p class="mb-4">{{blog.author.bio|truncatechars:"100"}}</p>
+                <p><a href="{% url "profile" blog.author.id %}" class="btn btn-primary btn-sm rounded px-2 py-2">Read my bio</a></p>
+                <p class="social">
+                  <a href="#" class="p-2"><span class="fa fa-facebook"></span></a>
+                  <a href="#" class="p-2"><span class="fa fa-twitter"></span></a>
+                  <a href="#" class="p-2"><span class="fa fa-instagram"></span></a>
+                  <a href="#" class="p-2"><span class="fa fa-youtube-play"></span></a>
+                </p>
+              </div>
+            </div>
+          </div>
+          <!-- END sidebar-box -->  
+          {% include "sidebar.html" %}
+          <!-- END sidebar-box -->
+
+        </div>
+        
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Start posts-entry -->
+  <section class="section posts-entry posts-entry-sm bg-white">
+    <div class="container">
+      <div class="row mb-4">
+        <div class="col-12 text-uppercase text-black">More Blog Posts</div>
+      </div>
+     
+      <div class="row">
+        {% for blogs in more_blogs|slice:'1:5' %}
+        <div class="col-md-6 col-lg-3">
+          <div class="blog-entry">
+            <a href="{% url "blog-post" blogs.id %}" class="img-link">
+              <img src="{{blogs.cover.url}}" alt="Image" class="img-fluid">
+            </a>
+            <span class="date">{{blogs.created | date:'d, F Y'}}</span>
+            <h2><a href="{% url "blog-post" blogs.id %}">{{blogs.title}}</a></h2>
+            <p>{{blogs.details|truncatechars:"100"|safe}}.</p>
+            <p><a href="{% url "blog-post" blogs.id %}" class="read-more">Continue Reading</a></p>
+          </div>
+        </div>
+        {% endfor %}
+        
+      </div>
+    </div>
+  </section>
+  <!-- End posts-entry -->
+
+  <section class="mt-0">
+    {% block footer %}
+    {% include "footer.html" %}
+    {% endblock footer %}
+</section>
+
+  
+
+
+    <script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
+    <script src="{% static "js/tiny-slider.js" %}"></script>
+
+    <script src="{% static "js/flatpickr.min.js" %}"></script>
+
+
+    <script src="{% static "js/aos.js" %}"></script>
+    <script src="{% static "js/glightbox.min.js" %}"></script>
+    <script src="{% static "js/navbar.js" %}"></script>
+    <script src="{% static "js/counter.js" %}"></script>
+    <script src="{% static "js/custom.js" %}"></script>
+    <script src="{% static "js/scroll-bottom-to-top.js" %}"></script>
+
+    
+  </body>
+  </html>

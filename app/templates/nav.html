@@ -1,0 +1,271 @@
+{% load static %}
+
+<div class="site-mobile-menu site-navbar-target bg-dark">
+    <div class="site-mobile-menu-header bg-dark">
+      <div class="site-mobile-menu-close">
+        <span class="icofont-close js-menu-toggle"></span>
+      </div>
+    </div>
+    <div class="site-mobile-menu-body bg-dark text-light"></div>
+  </div>
+
+
+  <style>
+
+        .user-pic
+        {
+            width: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-left: 30px;
+        }
+    
+       
+        .sub-menu-wrap
+        {
+            position: absolute;
+            top: 100%;
+            right: 5%;
+            width: 320px;
+            z-index: 3;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s;
+
+            
+        }
+
+        .sub-menu-wrap.open-menu
+        {
+            max-height: 400px;
+           
+        }
+
+        .sub-menu
+        {
+
+            background: #fff;
+            padding: 20px;
+            
+            border-radius: 2%;
+    
+            margin: 10px;
+        }
+        .user-info
+        {
+            display: flex;
+            align-items: center;
+
+        }
+        .user-info h3
+        {
+            font-weight: 500;
+
+        }
+        .user-info img 
+        {
+            width: 60px;
+            height:60px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        .sub-menu hr{
+            border: 0;
+            height: 1px;
+            width: 100%;
+            background: #ccc;
+            margin: 15px 0 10px;
+        }
+        .sub-menu-link
+        {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #525252;
+            margin: 12px 0;
+        }
+        .sub-menu-link p {
+            width: 100%;
+            margin: auto;
+            padding-right: 0.9rem;
+        }
+        .sub-menu-link i{
+            width: 40px;
+            height:40px;
+            background: #e5e5e5;
+            border-radius: 50%;
+            padding: 10px;
+            margin-right: 15px;
+
+        }
+        .sub-menu-link span
+        {
+            font-size: 22px;
+            transition: transform 0.5s;
+
+        }
+        .sub-menu-link:hover span
+        {
+            transform: translateX(5px);
+        }
+
+        .sub-menu-link:hover p{
+            font-weight: 600;
+        }
+  </style>
+
+
+<nav class="site-nav">
+    <div class="container">
+        <div class="menu-bg-wrap">
+            <div class="site-navigation">
+                <div class="row g-0 align-items-center">
+                    <div class="col-2">
+                        <a href="{% url 'home' %}" class="logo m-0 float-start">Blogy<span class="text-primary">.</span></a>
+                    </div>
+                    <div class="col-8 text-center">
+                        <form action="{% url "search" %}" method="GET" class="search-form d-inline-block d-lg-none">
+                            {% csrf_token %}
+                            <input type="text" name='q' class="form-control" placeholder="Search...">
+                            <span class="bi-search"></span>
+                        </form>
+
+                        <ul class="js-clone-nav d-none d-lg-inline-block text-start site-menu mx-auto">
+                            <li class="active"><a href="{% url 'home' %}">Home</a></li>
+                            <li class="has-children">
+                                <a class="js-menu-toggle" >Pages</a>
+                                <ul class="dropdown">
+                                    <li><a href="{% url "blogs" %}">Blog</a></li>
+                                    <li class="has-children"><a href="{% url "category" %}">Category</a>
+                                        <ul class="dropdown bg-dark ">
+                                            {% for category in categories %}
+                                                <li><a class="text-light" href="{% url 'category' %}?q={{category.name}}">{{category.name|capfirst}}</a></li>
+                                            {% endfor %}
+                                        
+                                                
+                                                
+                                            
+                                        </ul>
+                                    </li>
+                                    <li><a href="{% url "about-us" %}">About</a></li>
+                                    <li><a href="{% url "contact-us" %}">Contact Us</a></li>
+                                    
+                                   
+                                </ul>
+                            </li>
+                            <li  class="has-children"><a href="{% url "category" %}">Category</a>
+                                <ul class="dropdown">
+                                    {% for category in categories %}
+                                        <li><a href="{% url 'category' %}?q={{category.name}}">{{category.name|capfirst}}</a></li>
+                                    {% endfor %}
+                                
+                                        
+                                        
+                                    
+                                </ul>
+                            </li>
+                            {% for category in categories|slice:4 %}
+                                <li><a href="{% url 'category' %}?q={{category.name}}">{{category.name|capfirst}}</a></li>
+                            {% comment %} <li><a href="category.html">Politics</a></li> {% endcomment %}
+                            {% endfor %}
+                            {% if user.is_authenticated %}
+                                <li class="btn btn-link"><a href="{% url 'create-post' %}">Create-POST</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="col-1 text-end">
+                        <a href="#" class="burger ms-auto float-end site-menu-toggle js-menu-toggle d-inline-block d-lg-none light">
+                            <span></span>
+                        </a>
+                        <form action="{% url "search" %}" method="GET" class="search-form d-none d-lg-inline-block">
+                            {% csrf_token %}
+                            <input type="text" name="q" class="form-control" placeholder="Search...">
+                            <span class="bi-search"></span>
+                        </form>
+                       
+                    </div>
+                    
+                    <div class="col-1 text-end d-none d-sm-inline-block d-lg-inline-block">
+                        {% if user.is_authenticated %}
+                        
+                        {% comment %} <span class="text-light">{{request.user.username.upper}}</span>
+                        <a class="text-light" href="{% url "logout" %}">Logout</a> {% endcomment %}
+                        <img src="{{request.user.avatar.url}}" class="user-pic" onclick="toggleMenu()">
+                        <div class="sub-menu-wrap" id="subMenu">
+                            <div class="sub-menu">
+                                <div class="user-info">
+                                    <img src="{{request.user.avatar.url}}" alt="">
+                                    <h2>{{request.user.username.upper}}</h2>
+                                </div>
+                                <hr>
+                                <a href="{% url "profile" request.user.id %}" class="sub-menu-link">
+                                    <i class="bi bi-person-circle"></i>
+                                    <p>Profile</p>
+                                    <span>></span>
+                                </a>
+                                <a href="{% url "edit-profile" request.user.id %}" class="sub-menu-link">
+                                    <i class="bi bi-gear"></i>
+                                    <p>Setting & Edit Profile</p>
+                                    <span>></span>
+                                </a>
+                                <a href="#" class="sub-menu-link">
+                                    <i class="bi bi-headset"></i>
+                                    <p>Help & support</p>
+                                    <span>></span>
+                                </a>
+                                <a href="{% url "own-blogs" request.user.id %}" class="sub-menu-link">
+                                    <i class="bi bi-headset"></i>
+                                    <p>Own Blogs</p>
+                                    <span>></span>
+                                </a>
+                                <a href="{% url "logout" %}" class="sub-menu-link">
+                                    <i class="bi bi-box-arrow-left"></i>
+                                    <p>LOg out</p>
+                                    <span>></span>
+                                </a>
+                            </div>
+
+                                    {% else %}
+                                        <a href="{% url 'login' %}">
+                                    
+                                            <span class="text-light">Login</span>
+                                        </a>
+                                {% endif %}
+                        </div>
+                                
+                                    
+                                
+                    </div>
+                </div>
+        </div>
+    </div>
+</nav>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% endif %}" id="success-message">
+            <strong>{{message.tags| capfirst}}:</strong>
+            
+
+                    <span>{{ message }}</span>
+                
+            
+        </div>
+        {% endfor %}
+
+        <script>
+            // Automatically hide the success message after 6 seconds
+            setTimeout(function() {
+                document.getElementById('success-message').style.display = 'none';
+            }, 6000);
+        </script>
+    {% endif %}
+
+
+
+<script>
+    let subMenu = document.getElementById("subMenu");
+    function toggleMenu(){
+        subMenu.classList.toggle("open-menu");
+    }
+</script>

@@ -1,0 +1,43 @@
+{% load static %}
+
+    <div class="sidebar-box search-form-wrap">
+      <form action="#" class="sidebar-search-form">
+        <div class="form-group">
+          <span class="bi-search"></span>
+          <input type="text" class="form-control" id="s" placeholder="Type a keyword and hit enter">
+        </div>
+        
+      </form>
+    </div>
+   
+    <!-- END sidebar-box -->  
+    <div class="sidebar-box p-4 rounded">
+      <h3 class="heading">Popular Posts</h3>
+      {% include "popular_posts.html" %}
+    </div>
+    <!-- END sidebar-box -->
+
+    <div class="sidebar-box p-4 rounded">
+      <h3 class="heading">Categories</h3>
+      <ul class="categories">
+        {% for category in categories %}
+          <li><a href="{% url "category" %}?q={{category.name}}">{{category.name |capfirst}} <span>({{category.post_set.count}})</span></a></li>
+        {% endfor %}	
+        
+      </ul>
+    </div>
+    <!-- END sidebar-box -->
+
+    <div class="sidebar-box p-4 rounded">
+
+      {% if tags %}
+      <h3 class="heading">Tags</h3>
+      <ul class="tags">
+          {% for tag in tags %}
+          <li><a href="#">{{ tag.name }}</a></li>
+              
+          {% endfor %}
+      </ul>
+      {% endif %}
+    
+    </div>
