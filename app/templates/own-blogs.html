@@ -120,7 +120,7 @@
                     <a href="{% url "update-post" blog.id %}" class="btn btn-primary p-2 ">Edit</a>
                     <a href="" class="btn {% if blog.status == '1' %} btn-success {% else %}btn-warning {% endif %} p-2 ">{% if blog.status == '1' %}Publish {% else %}Draft{% endif %}</a>
 
-                    <a href="" class="btn btn-danger p-2 ">Delete</a>
+                    <a href="{% url "delete" blog.id %}" class="btn btn-danger p-2 ">Delete</a>
                 </div>
               </div>
             </div>

@@ -12,6 +12,89 @@ from django.contrib.auth import update_session_auth_hash
 
 # Create your views here.
 
+def index(request):
+    posts = post.objects.filter(status='1')
+    categories = Category.objects.all()
+
+   
+    
+    
+
+ 
+
+
+    
+    context = {
+        'posts':posts,
+        'categories':categories,
+        
+        
+        
+    }
+    return render(request,"index.html",context)
+
+
+
+
+def blogPost(request,pk):
+    blog = post.objects.get(id=pk)
+    
+    
+     # Increment the visit count
+    blog.visits += 1
+    blog.save()
+    
+    more_blogs = post.objects.filter(Q(category__name__icontains=blog.category) )
+    categories = Category.objects.all()
+    
+    tags = blog.tags.all()  # Retrieve associated tags for the post
+
+    
+    popular_posts = post.objects.order_by('-visits')[:5]  # Retrieve top 5 popular posts
+    
+    
+    blog_comments = blog.comment_set.all().order_by('-created')
+    
+    if request.method == "POST":
+        
+        commnets = Comment.objects.create(
+            blog = blog,
+            name = request.POST.get('name'),
+            comment = request.POST.get('massage'),
+        )
+
+    context = {
+        'more_blogs':more_blogs,
+        'blog':blog,
+        'categories':categories,
+        'blog_comments':blog_comments,
+        'popular_posts': popular_posts,
+        'tags': tags,
+    }
+    return render(request,"single.html",context)
+
+
+
+
+def AllBlogs(request):
+    posts = post.objects.filter(status='1')
+    categories = Category.objects.all()
+    
+    
+    
+    
+    
+    page_number = request.GET.get("page")
+    paginator = Paginator(posts, 5)  # Show 25 contacts per page.
+    try:
+        page_obj = paginator.get_page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+        
+    return render(request,"blog.html",{'page_obj':page_obj,'categories':categories,'posts':posts})
+
 
 def loginPage(request):
 
@@ -76,102 +159,6 @@ def registerUser(request):
 
 
 
-
-
-def index(request):
-    posts = post.objects.filter(status='1')
-    categories = Category.objects.all()
-
-    tech = post.objects.filter(category__name="Tech",status='1')
-    business = post.objects.filter(category__name="BUSINESS",status='1')
-    politics = post.objects.filter(category__name="politics",status='1')
-    natures = post.objects.filter(category__name="Nature",status='1')
-    
-    
-
- 
-
-
-    
-    context = {
-        'posts':posts,
-        'categories':categories,
-        'tech':tech,
-        'business':business,
-        'politics':politics,
-        'natures':natures,
-        
-        
-    }
-    return render(request,"index.html",context)
-
-
-# @login_required
-# def edit_profile(request, pk):
-#     if request.method == 'POST':
-#         user_form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
-#         password_form = PasswordChangeForm(request.user, request.POST)
-        
-#         if user_form.is_valid() and password_form.is_valid():
-#             user_form.save()
-#             password_form.save()
-#             messages.success(request, 'Profile updated successfully.')
-#             return redirect('profile', pk=request.user.pk)  # Redirect to user profile page after saving
-#         else:
-#             # Capture form errors and add them to messages
-#             for field, errors in user_form.errors.items():
-#                 for error in errors:
-#                     messages.error(request, f"{user_form.fields[field].label}: {error}")
-#             for field, errors in password_form.errors.items():
-#                 for error in errors:
-#                     messages.error(request, f"{password_form.fields[field].label}: {error}")
-
-    
-#     else:
-#         user_form = CustomUserChangeForm(instance=request.user)
-#         password_form = PasswordChangeForm(request.user)
-
-#     return render(request, 'edit_profile.html', {'user_form': user_form, 'password_form': password_form})
-
-
-
-@login_required
-def edit_profile(request, pk):
-    if request.method == 'POST':
-        user_form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
-        password_form = CustomPasswordChangeForm(request.user, request.POST)
-        
-        
-        if 'change_password' in request.POST and request.POST['change_password'] == 'on':  # If checkbox is checked
-            if user_form.is_valid() and password_form.is_valid():
-                user_form.save()
-                password_form.save()
-                update_session_auth_hash(request, request.user)  # Update session with new authentication hash
-                messages.success(request, 'Profile and password updated successfully.')
-                return redirect('profile', pk=request.user.pk)  # Redirect to user profile page after saving
-            
-            for field, errors in password_form.errors.items():
-                for error in errors:
-                    messages.error(request, f"{password_form.fields[field].label}: {error}")
-            
-            
-        else:
-            # If checkbox is not checked
-            if user_form.is_valid():
-                user_form.save()
-                messages.success(request, 'Profile updated successfully.')
-                return redirect('profile', pk=request.user.pk)  # Redirect to user profile page after saving
-        
-            # Capture form errors and add them to messages
-            for field, errors in user_form.errors.items():
-                for error in errors:
-                    messages.error(request, f"{user_form.fields[field].label}: {error}")
-            
-    else:
-        user_form = CustomUserChangeForm(instance=request.user)
-        password_form = CustomPasswordChangeForm(request.user)
-    
-    return render(request, 'edit_profile.html', {'user_form': user_form, 'password_form': password_form})
 def CreatePost(request):
     posts = post.objects.filter(status='1')
     form = CreatePostForm()
@@ -235,18 +222,6 @@ def CreatePost(request):
 
 
 
-
-def userProfile(request,pk):
-    user = CustomUser.objects.get(id=pk)
-
-    blogs = user.post_set.all()
-    # blogs_messages = user.comment_set.all()
-    category = Category.objects.all()
-    context = {'user':user,'blogs':blogs,"category":category}
-    return render(request, 'profile.html',context)
-
-
-
 def UpdatePost(request, pk):
     post_instance = post.objects.get(id=pk)
     form = PostForm(instance=post_instance)
@@ -276,50 +251,60 @@ def UpdatePost(request, pk):
     }
     return render(request, "update-post.html", context)
 
-def blogPost(request,pk):
-    blog = post.objects.get(id=pk)
-    posts = post.objects.filter(status="1")
-    
-    
-     # Increment the visit count
-    blog.visits += 1
-    blog.save()
-    
-    more_blogs = post.objects.filter(Q(category__name__icontains=blog.category) )
-    posts = post.objects.all()
-    categories = Category.objects.all()
-    
-    tags = blog.tags.all()  # Retrieve associated tags for the post
 
-    
-    popular_posts = post.objects.order_by('-visits')[:5]  # Retrieve top 5 popular posts
-    
-    
-    blog_comments = blog.comment_set.all().order_by('-created')
-    
-    if request.method == "POST":
+
+
+@login_required
+def edit_profile(request, pk):
+    if request.method == 'POST':
+        user_form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
+        password_form = CustomPasswordChangeForm(request.user, request.POST)
         
-        commnets = Comment.objects.create(
-            blog = blog,
-            name = request.POST.get('name'),
-            comment = request.POST.get('massage'),
-        )
+        
+        if 'change_password' in request.POST and request.POST['change_password'] == 'on':  # If checkbox is checked
+            if user_form.is_valid() and password_form.is_valid():
+                user_form.save()
+                password_form.save()
+                update_session_auth_hash(request, request.user)  # Update session with new authentication hash
+                messages.success(request, 'Profile and password updated successfully.')
+                return redirect('profile', pk=request.user.pk)  # Redirect to user profile page after saving
+            
+            for field, errors in password_form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{password_form.fields[field].label}: {error}")
+            
+            
+        else:
+            # If checkbox is not checked
+            if user_form.is_valid():
+                user_form.save()
+                messages.success(request, 'Profile updated successfully.')
+                return redirect('profile', pk=request.user.pk)  # Redirect to user profile page after saving
+        
+            # Capture form errors and add them to messages
+            for field, errors in user_form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{user_form.fields[field].label}: {error}")
+            
+    else:
+        user_form = CustomUserChangeForm(instance=request.user)
+        password_form = CustomPasswordChangeForm(request.user)
+    
+    return render(request, 'edit_profile.html', {'user_form': user_form, 'password_form': password_form})
 
-    context = {
-        'more_blogs':more_blogs,
-        'blog':blog,
-        'posts':posts,
-        'categories':categories,
-        'blog_comments':blog_comments,
-        'popular_posts': popular_posts,
-        'tags': tags,
-    }
-    return render(request,"single.html",context)
 
 
-def popular_posts(request):
-    popular_posts = popular_posts.objects.order_by('-visits')[:5]  # Retrieve top 5 popular posts
-    return render(request, 'popular_posts.html', {'popular_posts': popular_posts})
+def userProfile(request,pk):
+    user = CustomUser.objects.get(id=pk)
+
+    blogs = user.post_set.all()
+    # blogs_messages = user.comment_set.all()
+    category = Category.objects.all()
+    context = {'user':user,'blogs':blogs,"categories":category}
+    return render(request, 'profile.html',context)
+
+
+
 
 def search(request):
     posts = post.objects.filter(status='1')
@@ -377,24 +362,6 @@ def category(request):
     return render(request,'category.html',context)
 
 
-def AllBlogs(request):
-    posts = post.objects.filter(status='1')
-    categories = Category.objects.all()
-    
-    
-    
-    
-    
-    page_number = request.GET.get("page")
-    paginator = Paginator(posts, 5)  # Show 25 contacts per page.
-    try:
-        page_obj = paginator.get_page(page_number)
-    except PageNotAnInteger:
-        page_obj = paginator.page(1)
-    except EmptyPage:
-        page_obj = paginator.page(paginator.num_pages)
-        
-    return render(request,"blog.html",{'page_obj':page_obj,'categories':categories,'posts':posts})
 
 def aboutUs(request):
     posts = post.objects.filter(status='1')
@@ -418,3 +385,11 @@ def YourBlogs(request,pk):
     blogs = user.post_set.all()
     context = {'user':user,'blogs':blogs,"category":category}
     return render(request,'own-blogs.html',context)
+def deleteBLog(request,pk):
+    blog = post.objects.get(id=pk)
+    blog.delete()
+    return redirect('own-blogs', request.user.id)
+
+def popular_posts(request):
+    popular_posts = popular_posts.objects.order_by('-visits')[:5]  # Retrieve top 5 popular posts
+    return render(request, 'popular_posts.html', {'popular_posts': popular_posts})

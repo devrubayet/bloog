@@ -17,4 +17,5 @@ urlpatterns = [
     path('contact-us',contactUs,name="contact-us"),
     path('edit-profile/<str:pk>', edit_profile, name='edit-profile'),
     path("own-blogs/<str:pk>",YourBlogs,name="own-blogs"),
+    path("delete/<str:pk>",deleteBLog,name="delete"),
 ]
