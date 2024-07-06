@@ -46,6 +46,7 @@ class post(models.Model):
     cover = models.ImageField(upload_to='post_covers/',blank=True, null=True, default='post_covers/default.png')
     tags = models.ManyToManyField(Tag)
     status = models.CharField(choices=STATUS,max_length=100)
+
     
     
     details = RichTextField(null=True, blank=True)

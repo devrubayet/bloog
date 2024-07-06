@@ -90,46 +90,45 @@
 
 	<div class="container my-5">
         <div class="text-center mb-5">
-          <h3>My All Blogs List</h3>
+          <h3>ALL RECENTS POSTS</h3>
           <p class="lead">
-            "Unleashing Creativity, One Post at a Time – Your Journey, Your Voice, Your Blog."
-
+            "Discover the Latest Insights and Stories – Your Daily Dose of Inspiration and Knowledge."
           </p>
         </div>
 
-        {% for blog in blogs %}
+        {% for post in posts %}
         <div class="card mb-3">
           <div class="card-body">
             <div class="d-flex flex-column flex-lg-row">
-              <img src="{{blog.cover.url}}" class="avatar  rounded-3 me-4"/>
+              <img src="{{post.cover.url}}" class="avatar  rounded-3 me-4"/>
               <div class="row flex-fill">
                 <div class="col-sm-5">
-                  <h4 class="h5"><a href="{% url "blog-post" blog.id %}">{{blog.title}}</a></h4>
-                  <span class="badge bg-secondary ">{{blog.category}}</span>
-                  <span class="badge {% if blog.status == '1' %} bg-success {% else %}bg-warning {% endif %}">Status:{% if blog.status == '1' %} Publish {% else %} Draft{% endif %}</span>
+                  <h4 class="h5"><a href="{% url "blog-post" post.id %}">{{post.title}}</a></h4>
+                  <span class="badge bg-secondary ">{{post.category}}</span>
+                  <span class="badge {% if post.status == '1' %} bg-success {% else %}bg-warning {% endif %}">Status:{% if post.status == '1' %} Publish {% else %} Draft{% endif %}</span>
                 </div>
                 <div class="col-sm-4 py-2">
 
                 
-                    {% for tag in blog.tags.all %}
+                    {% for tag in post.tags.all %}
                         <span class="badge bg-secondary">{{tag.name}}</span>
                     {% endfor %}
                  
                 </div>
                 
                 <div class="col-sm-3 p-2 text-lg-end">
-                    <a href="{% url "update-post" blog.id %}" class="btn btn-primary p-2 ">Edit</a>
-                    <form class="d-inline d-lg-inline d-sm-inline-block d-md-inline-block py-2" method="post" action="{% url "toggle_publish" blog.id %}">
+                    <a href="{% url "update-post" post.id %}" class="btn btn-primary p-2 ">Edit</a>
+                    <form class="d-inline d-lg-inline d-sm-inline-block d-md-inline-block py-2" method="post" action="{% url "toggle_publish" post.id %}">
                       {% csrf_token %}
                       
-                      {% if blog.status == '1' %}
+                      {% if post.status == '1' %}
                       <button class="btn  btn-secondary   p-2 ">Unpublish</button>
                       {% else %}
                       <button class="btn btn-success  p-2 ">Publish </button>
                       {% endif %}
                   </form>
 
-                    <a href="{% url "delete" blog.id %}" class="btn btn-danger py-2 my-2">Delete</a>
+                    <a href="{% url "delete" post.id %}" class="btn btn-danger py-2 my-2">Delete</a>
                 </div>
               </div>
             </div>

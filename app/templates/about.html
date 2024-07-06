@@ -32,11 +32,22 @@
 	
 		<link rel="stylesheet" href="{% static "css/flatpickr.min.css" %}">
 	
+		
 	
-		<title>Blogy &mdash; Blogs</title>
+	
+		<title>Blogy &mdash; Our Vision Is Share Knowladge With You</title>
+	
 	</head>
 <body>
 
+	<div class="site-mobile-menu site-navbar-target">
+		<div class="site-mobile-menu-header">
+			<div class="site-mobile-menu-close">
+				<span class="icofont-close js-menu-toggle"></span>
+			</div>
+		</div>
+		<div class="site-mobile-menu-body"></div>
+	</div>
 
 	{% include "nav.html" %}
 
@@ -55,7 +66,7 @@
 	<div class="section sec-halfs py-0">
 		<div class="container">
 			<div class="half-content d-lg-flex align-items-stretch">
-				<div class="img" style="background-image: url('images/hero_1.jpg')" data-aos="fade-in" data-aos-delay="100">
+				<div class="img" style="background-image: url('{% static "images/hero_1.jpg" %}')" data-aos="fade-in" data-aos-delay="100">
 					
 				</div>
 				<div class="text">
@@ -66,7 +77,7 @@
 			</div>
 
 			<div class="half-content d-lg-flex align-items-stretch">
-				<div class="img order-md-2" style="background-image: url('images/hero_2.jpg')" data-aos="fade-in">
+				<div class="img order-md-2" style="background-image: url('{% static "images/hero_2.jpg" %}')" data-aos="fade-in">
 					
 				</div>
 				<div class="text">
@@ -126,33 +137,33 @@
 
 			<div class="row">
 				<div class="col-lg-4 mb-4 text-center" data-aos="fade-up" data-aos-delay="0">
-					<img src="images/person_1.jpg" alt="Image" class="img-fluid w-50 rounded-circle mb-3">
+					<img src="{% static "images/person_1.jpg" %}" alt="Image" class="img-fluid w-50 h-50 rounded-circle mb-3">
 					<h5 class="text-black">James Griffin</h5>
 					<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. </p>
 				</div>
 				<div class="col-lg-4 mb-4 text-center" data-aos="fade-up" data-aos-delay="100">
-					<img src="images/person_2.jpg" alt="Image" class="img-fluid w-50 rounded-circle mb-3">
+					<img src="{% static "images/person_2.jpg" %}" alt="Image" class="img-fluid w-50 h-50 rounded-circle mb-3">
 					<h5 class="text-black">Claire Smith</h5>
 					<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. </p>
 				</div>
 				<div class="col-lg-4 mb-4 text-center" data-aos="fade-up" data-aos-delay="200">
-					<img src="images/person_3.jpg" alt="Image" class="img-fluid w-50 rounded-circle mb-3">
+					<img src="{% static "images/person_3.jpg" %}" alt="Image" class="img-fluid w-50 h-50 rounded-circle mb-3">
 					<h5 class="text-black">Jessica Wilson</h5>
 					<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. </p>
 				</div>
 
 				<div class="col-lg-4 mb-4 text-center" data-aos="fade-up" data-aos-delay="0">
-					<img src="images/person_4.jpg" alt="Image" class="img-fluid w-50 rounded-circle mb-3">
+					<img src="{% static "images/person_4.jpg" %}" alt="Image" class="img-fluid w-50 h-50 rounded-circle mb-3">
 					<h5 class="text-black">William Anderson</h5>
 					<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. </p>
 				</div>
 				<div class="col-lg-4 mb-4 text-center" data-aos="fade-up" data-aos-delay="100">
-					<img src="images/person_5.jpg" alt="Image" class="img-fluid w-50 rounded-circle mb-3">
+					<img src="{% static "images/person_5.jpg" %}" alt="Image" class="img-fluid w-50 h-50 rounded-circle mb-3">
 					<h5 class="text-black">Julie Harvey</h5>
 					<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. </p>
 				</div>
 				<div class="col-lg-4 mb-4 text-center" data-aos="fade-up" data-aos-delay="200">
-					<img src="images/person_2.jpg" alt="Image" class="img-fluid w-50 rounded-circle mb-3">
+					<img src="{% static "images/person_2.jpg" %}" alt="Image" class="img-fluid w-50 h-50 rounded-circle mb-3">
 					<h5 class="text-black">Shana Clarkson</h5>
 					<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. </p>
 				</div>
@@ -167,7 +178,7 @@
 		<div class="container">
 			<div class="row justify-content-between">
 				<div class="col-lg-7 mb-4 mb-lg-0">
-					<img src="images/img_7_sq.jpg" alt="Image" class="img-fluid rounded
+					<img src="{% static "images/img_7_sq.jpg" %}" alt="Image" class="img-fluid rounded
 					">
 				</div>
 				<div class="col-lg-4 ps-lg-2">
@@ -211,15 +222,11 @@
 		</div>
 	</div>
 
-	<section class="mt-0">
-        {% block footer %}
-        {% include "footer.html" %}
-        {% endblock footer %}
-    </section>
+	{% include "footer.html" %}
+   
 
-    
 
-	<script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
+    <script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
     <script src="{% static "js/tiny-slider.js" %}"></script>
 
     <script src="{% static "js/flatpickr.min.js" %}"></script>
@@ -230,8 +237,6 @@
     <script src="{% static "js/navbar.js" %}"></script>
     <script src="{% static "js/counter.js" %}"></script>
     <script src="{% static "js/custom.js" %}"></script>
-    <script src="{% static "js/scroll-bottom-to-top.js" %}"></script>
-
 
     
   </body>

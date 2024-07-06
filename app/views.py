@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, render,HttpResponse,redirect
+from django.views import View
 from .models import *
 from .forms import *
 from django.contrib.auth.decorators import login_required
@@ -9,6 +10,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 
+from .utils import send_welcome_email  # Import the utility function
 
 # Create your views here.
 
@@ -149,6 +151,9 @@ def registerUser(request):
             user.save()
             login(request,user)
             messages.success(request,"user creation succes!")
+            
+             # Send welcome email
+            send_welcome_email(user.email)
             return redirect('home')
 
     context = {
@@ -219,6 +224,8 @@ def CreatePost(request):
         'categories': categories,
     }
     return render(request, "create-post.html", context)
+
+
 
 
 
@@ -390,6 +397,26 @@ def deleteBLog(request,pk):
     blog.delete()
     return redirect('own-blogs', request.user.id)
 
+class TogglePublishView(View):
+    def post(self, request, pk):
+        post_instance = get_object_or_404(post, pk=pk)
+        if post_instance.status == '0':
+            post_instance.status = '1'
+        else:
+            post_instance.status = '0'
+        post_instance.save()
+        previous_url = request.META.get('HTTP_REFERER', '/')
+        return redirect(previous_url)
+
 def popular_posts(request):
     popular_posts = popular_posts.objects.order_by('-visits')[:5]  # Retrieve top 5 popular posts
     return render(request, 'popular_posts.html', {'popular_posts': popular_posts})
+ 
+
+
+def all_new_posts(request):
+    posts = post.objects.all().order_by('-created','-updated')
+    context = {
+        'posts':posts
+    }
+    return render(request,"all_new_post.html", context)

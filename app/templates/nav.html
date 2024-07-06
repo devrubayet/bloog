@@ -241,16 +241,18 @@
                                     <p>Setting & Edit Profile</p>
                                     <span>></span>
                                 </a>
-                                <a href="#" class="sub-menu-link">
-                                    <i class="bi bi-headset"></i>
-                                    <p>Help & support</p>
-                                    <span>></span>
-                                </a>
                                 <a href="{% url "own-blogs" request.user.id %}" class="sub-menu-link">
-                                    <i class="bi bi-headset"></i>
+                                    <i class="bi bi-file-richtext"></i>
                                     <p>Own Blogs</p>
                                     <span>></span>
                                 </a>
+                                {% if user.is_superuser %}
+                                <a href="{% url "all_new_posts" %}" class="sub-menu-link">
+                                    <i class="bi bi-file-text"></i>
+                                    <p>All New Blogs</p>
+                                    <span>></span>
+                                </a>
+                                {% endif %}
                                 <a href="{% url "logout" %}" class="sub-menu-link">
                                     <i class="bi bi-box-arrow-left"></i>
                                     <p>LOg out</p>

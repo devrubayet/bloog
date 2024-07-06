@@ -17,5 +17,8 @@ urlpatterns = [
     path('contact-us',contactUs,name="contact-us"),
     path('edit-profile/<str:pk>', edit_profile, name='edit-profile'),
     path("own-blogs/<str:pk>",YourBlogs,name="own-blogs"),
+    path('post/<str:pk>/toggle_publish', TogglePublishView.as_view(), name='toggle_publish'),
+    path('all_new_posts', all_new_posts, name='all_new_posts'),
+
     path("delete/<str:pk>",deleteBLog,name="delete"),
 ]
